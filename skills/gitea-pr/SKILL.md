@@ -1,32 +1,49 @@
 ---
 name: gitea-pr
-description: Efficient workflow for creating pull requests in Gitea repositories
+description: Workflow for repositories hosted on the user's Gitea server
 ---
 
-# Gitea Pull Requests
+# Gitea Workflow
 
-When working with a repository hosted on Gitea:
+The user's Git server is Gitea.
 
-- If the target branch is protected, never attempt to push directly to it.
-- Create the feature branch before committing changes.
-- Commit the changes to the feature branch.
-- Push the feature branch to the remote repository.
-- Create the pull request directly using the Gitea API.
-- Do not open the Gitea web UI to create a pull request.
-- Do not navigate to `/pulls/new`.
-- Do not attempt browser login for pull request creation.
-- Do not spend time inspecting the pull request web page before creating it.
-- Use the existing authentication available to the agent.
-- Only use the browser UI as a fallback if the Gitea API method fails.
-- After creating the pull request, verify that it was created successfully and report its number and URL.
+Gitea server:
+http://192.168.0.8:3000
 
-Preferred workflow:
+Important:
 
-1. Check git status and current branch.
-2. Determine the target branch.
-3. Create a feature branch if the target branch is protected.
-4. Make and commit the requested changes.
-5. Push the feature branch.
-6. Create the pull request through the Gitea API.
-7. Report the pull request URL and number.
+- Do NOT assume the server is Forgejo.
+- Do NOT use forgejo.mt-projects.com.
+- Do NOT invent or assume a FORGEJO_TOKEN environment variable.
+- Do NOT attempt to authenticate through a browser.
+- Use the existing Git credentials configured in the environment for Git operations.
 
+Repository workflow:
+
+1. If `/workspace/project` already exists and is a Git repository, inspect it before attempting to clone the repository again.
+2. Do not clone a repository again if `/workspace/project` is already the requested repository.
+3. Check the current Git remote with `git remote -v`.
+4. If the remote points to the user's Gitea server, use it.
+5. For protected `master` or `main` branches, never push directly to that branch.
+6. Create the feature branch before making the commit.
+7. Commit the requested changes to the feature branch.
+8. Push the feature branch to Gitea.
+9. Create the pull request using the Gitea API.
+10. Do NOT open the Gitea web UI to create a pull request.
+11. Do NOT navigate to `/pulls/new`.
+12. Do NOT attempt browser login for pull request creation.
+13. Do not spend time looking for browser credentials when Git credentials are already available.
+14. After creating the pull request, report its number and URL.
+
+For an existing repository, the preferred workflow is:
+
+git status
+git remote -v
+git branch --show-current
+git fetch
+create feature branch if necessary
+make changes
+git add
+git commit
+git push
+create PR through Gitea API
