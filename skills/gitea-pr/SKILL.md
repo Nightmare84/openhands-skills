@@ -47,3 +47,12 @@ git add
 git commit
 git push
 create PR through Gitea API
+
+CRITICAL:
+
+Never invent changes for the purpose of creating a pull request.
+If the user asks to create a pull request but does not specify changes, inspect the repository for existing user changes first.
+If there are no user-requested changes and no uncommitted changes or commits that need to be submitted, DO NOT create or modify any files.
+Do NOT create README.md, CHANGELOG.md, documentation, tests, comments, formatting changes, or any other artificial changes just to make the pull request possible.
+In this situation, stop and ask the user what changes should be included in the pull request.
+A pull request is a mechanism for submitting actual requested changes. It is not a task to generate arbitrary changes merely to produce a pull request.
